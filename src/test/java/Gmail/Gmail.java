@@ -28,7 +28,7 @@ private static WebElement messageInput;
 @FindBy(xpath = "//div[@role='button'][text()='Send']")
 private static WebElement sendButton;
 @FindBy(xpath = "//td/div[2]//span[@email='kotmike33@gmail.com']")
-private static WebElement firstEmailFromTheList;
+private static WebElement lastEmailFromMe;
 @FindBy(xpath = "//div[@data-message-id]//span[@email][@name]")
 private static WebElement senderOfMail;
 @FindBy(xpath = "//div[@role='main']//h2")
@@ -54,7 +54,6 @@ private static WebElement messageOfMail;
 		Thread.sleep(2000);
 		Reporter.log("Email sent");
 	}
-
 	@Step("Test 2")
 	@Description("Verifying an email")
 	@Severity(SeverityLevel.NORMAL)
@@ -62,14 +61,14 @@ private static WebElement messageOfMail;
 	public void verifyEmailReceived() {
 		driver.navigate().refresh();
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOf(firstEmailFromTheList)));
+		wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOf(lastEmailFromMe)));
 		try {
-			firstEmailFromTheList.click();
+			lastEmailFromMe.click();
 		} catch (UnhandledAlertException e) {
 			Alert alert = driver.switchTo().alert();
 			System.out.println("Alert text: " + alert.getText());
 			alert.dismiss();
-			firstEmailFromTheList.click();
+			lastEmailFromMe.click();
 		}
 		Allure.step("Verifying Email data", () -> {
 			Assert.assertEquals(senderOfMail.getAttribute("email"), ConfigVariables.EMAIL);
